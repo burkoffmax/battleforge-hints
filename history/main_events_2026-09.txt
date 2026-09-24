@@ -1,0 +1,36 @@
+# Main events by game day, September 2026 -- transcribed from a player-supplied
+# screenshot (2026-09-24). A game day starts at 17:00 UTC (20:00 MSK), e.g.
+# "Th 9/24: Armageddon" = Armageddon starting 2026-09-24 17:00 UTC.
+# Last item on each line = the Summon Mastery captain of that day.
+# [brackets] = text cut off in the screenshot, restored from the 6/12/24-day
+# cycles and the Summon Mastery order.
+#
+# Abbreviations: Authority = Authority Rush, R. Slaughter = Ruthless Slaughter,
+# TinMan = Rise of the Ancients, GH = The Great Hunt, Evolution = Pursuit of
+# Evolution, Essence = Immortal Essence, Experience = Pursuit of Experience,
+# KvK = Clash of Kingdoms, CoT = Clash for the Throne, S. Invasion = Shadow
+# Invasion, Olympus = Trials of Olympus. RoA, Mercs = not yet identified.
+
+W 9/9: Arachne, Authority, Wu Zetian
+Th 9/10: R. Slaughter, RoA, Wu Zetian
+F 9/11: TinMan, Mercs, Stror
+Sa 9/12: Olympus (Chimera), Hellforge, KvK, Stror
+S 9/13: Olympus (Basilisk), Hellforge, GH, Evolution, Essence, Aydae
+M 9/14: Olympus (Lava), Doomsday, Experience, Aydae
+Tu 9/15: Olympus (Tartaros), Arachne, Authority, Minamoto
+W 9/16: Olympus (Briareus), R. Slaughter, RoA, Minamoto
+Th 9/17: TinMan, Mercs, CoT, Brunhilde
+F 9/18: Ragnarok, CoT, Brunhilde
+Sa 9/19: Ragnarok, GH, Evolution, Essence, Carter
+S 9/20: Doomsday, Experience, Carter
+M 9/21: Arachne, Authority, Alexande[r]
+Tu 9/22: R. Slaughter, RoA, Alexander
+W 9/23: TinMan, Mercs, Ye Ho-Sung
+Th 9/24: Armageddon, KvK, Ye Ho-S[ung]
+F 9/25: Armageddon, GH, Evolution, Essence, Dustan
+Sa 9/26: Doomsday, Experience, Dustan
+S 9/27: Dark Omens, Arachne, Leo[nidas]
+M 9/28: Dark Omens, R. Slaughter, RoA, Leonidas
+Tu 9/29: TinMan, Mercs, CoT, Bernard
+W 9/30: S. Invasion, CoT, Bernard
+Th 10/1: S. Invasion, GH, Evolution, E[ssence, Doria]
