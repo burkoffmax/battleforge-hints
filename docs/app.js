@@ -13,31 +13,97 @@ const SITE_STRINGS = {
     back: "Back", language: "Language", started: "Started",
     tz_note: "Times are shown in your time zone ({tz}).",
     source: "Source: {link}", no_data: "No data yet.",
+    cal_main: "Main events",
+    cal_mini: "Mini events",
+    today: "Today",
+    new_day_in: "New day in {time}",
+    cal_note: "A game day starts at {time} your time. Dates are calculated from the game's fixed cycles (6, 12 and 24 days), so the game may occasionally deviate.",
+    cal_incomplete: "Some events of this day are not recorded yet.",
+    kind_monthly: "Every 24 days",
+    kind_biweekly: "Every 12 days",
+    kind_weekly: "Every 6 days",
+    now: "Now",
+    until: "until {time}",
   },
   ru: {
     back: "Назад", language: "Язык", started: "Идёт",
     tz_note: "Время указано в вашем часовом поясе ({tz}).",
     source: "Источник: {link}", no_data: "Данных пока нет.",
+    cal_main: "Основные события",
+    cal_mini: "Мини-события",
+    today: "Сегодня",
+    new_day_in: "Новый день через {time}",
+    cal_note: "Игровой день начинается в {time} по вашему времени. Даты рассчитаны по фиксированным циклам игры (6, 12 и 24 дня), поэтому игра изредка может отклоняться.",
+    cal_incomplete: "Часть событий этого дня ещё не записана.",
+    kind_monthly: "Раз в 24 дня",
+    kind_biweekly: "Раз в 12 дней",
+    kind_weekly: "Раз в 6 дней",
+    now: "Сейчас",
+    until: "до {time}",
   },
   fr: {
     back: "Retour", language: "Langue", started: "En cours",
     tz_note: "Heures affichées dans votre fuseau horaire ({tz}).",
     source: "Source : {link}", no_data: "Pas encore de données.",
+    cal_main: "Événements principaux",
+    cal_mini: "Mini-événements",
+    today: "Aujourd'hui",
+    new_day_in: "Nouveau jour dans {time}",
+    cal_note: "Une journée de jeu commence à {time} (votre heure). Dates calculées d'après les cycles fixes du jeu (6, 12 et 24 jours) ; le jeu peut parfois s'en écarter.",
+    cal_incomplete: "Certains événements de ce jour ne sont pas encore enregistrés.",
+    kind_monthly: "Tous les 24 jours",
+    kind_biweekly: "Tous les 12 jours",
+    kind_weekly: "Tous les 6 jours",
+    now: "Maintenant",
+    until: "jusqu'à {time}",
   },
   de: {
     back: "Zurück", language: "Sprache", started: "Läuft",
     tz_note: "Zeiten in deiner Zeitzone ({tz}).",
     source: "Quelle: {link}", no_data: "Noch keine Daten.",
+    cal_main: "Hauptevents",
+    cal_mini: "Mini-Events",
+    today: "Heute",
+    new_day_in: "Neuer Tag in {time}",
+    cal_note: "Ein Spieltag beginnt um {time} (deine Zeit). Termine sind aus den festen Zyklen des Spiels (6, 12 und 24 Tage) berechnet; das Spiel kann gelegentlich abweichen.",
+    cal_incomplete: "Einige Events dieses Tages sind noch nicht erfasst.",
+    kind_monthly: "Alle 24 Tage",
+    kind_biweekly: "Alle 12 Tage",
+    kind_weekly: "Alle 6 Tage",
+    now: "Jetzt",
+    until: "bis {time}",
   },
   pt: {
     back: "Voltar", language: "Idioma", started: "Em andamento",
     tz_note: "Horários no seu fuso horário ({tz}).",
     source: "Fonte: {link}", no_data: "Ainda sem dados.",
+    cal_main: "Eventos principais",
+    cal_mini: "Mini eventos",
+    today: "Hoje",
+    new_day_in: "Novo dia em {time}",
+    cal_note: "Um dia de jogo começa às {time} no seu horário. As datas são calculadas pelos ciclos fixos do jogo (6, 12 e 24 dias), então o jogo pode ocasionalmente variar.",
+    cal_incomplete: "Alguns eventos deste dia ainda não foram registrados.",
+    kind_monthly: "A cada 24 dias",
+    kind_biweekly: "A cada 12 dias",
+    kind_weekly: "A cada 6 dias",
+    now: "Agora",
+    until: "até {time}",
   },
   tr: {
     back: "Geri", language: "Dil", started: "Başladı",
     tz_note: "Saatler kendi saat diliminizde gösterilir ({tz}).",
     source: "Kaynak: {link}", no_data: "Henüz veri yok.",
+    cal_main: "Ana etkinlikler",
+    cal_mini: "Mini etkinlikler",
+    today: "Bugün",
+    new_day_in: "Yeni gün: {time}",
+    cal_note: "Oyun günü sizin saatinizle {time} itibarıyla başlar. Tarihler oyunun sabit döngülerinden (6, 12 ve 24 gün) hesaplanır; oyun zaman zaman sapabilir.",
+    cal_incomplete: "Bu günün bazı etkinlikleri henüz kaydedilmedi.",
+    kind_monthly: "24 günde bir",
+    kind_biweekly: "12 günde bir",
+    kind_weekly: "6 günde bir",
+    now: "Şimdi",
+    until: "{time} kadar",
   },
 };
 
@@ -71,6 +137,7 @@ const $lang = document.getElementById("lang");
 
 let I18N = null;
 let STATIC = null;
+let CAL = null;
 let lang = "en";
 // Teardown callbacks (timers, media-query listeners) for the current
 // view -- run on every route change so nothing leaks across views.
@@ -253,14 +320,72 @@ function renderHome() {
   );
 }
 
+// -- main-event calendar (data/calendar.json) ------------------------------
+// Everything is in whole "game day numbers": day k runs from k*DAY +
+// day_start_utc_hour to the same time on day k+1 (UTC), and is labeled
+// with the UTC calendar date k*DAY -- matching how players write the
+// schedule ("Th 9/24: Armageddon" = starts 9/24 17:00 UTC).
+const DAY = 86400000;
+const mod = (a, n) => ((a % n) + n) % n;
+const dayNumber = (iso) => Date.parse(iso + "T00:00:00Z") / DAY;
+const dayStartMs = (k) => k * DAY + CAL.day_start_utc_hour * 3600000;
+const currentGameDay = () => Math.floor((Date.now() - CAL.day_start_utc_hour * 3600000) / DAY);
+
+function eventsOnDay(k) {
+  const out = [];
+  for (const e of CAL.events) {
+    const n = mod(k - dayNumber(e.first), e.period);
+    const span = e.stages ? e.stages.length : e.span || 1;
+    if (n < span) out.push({ ...e, dayOf: n, span });
+  }
+  return out;
+}
+
+// Index into STATIC.summon (the order has duplicates, so the slot index
+// -- not the name -- identifies where in the 48-day loop we are).
+function summonSlot(k) {
+  const s = CAL.summon;
+  return mod(Math.floor((k - dayNumber(s.first)) / s.days) + s.position - 1, STATIC.summon.length);
+}
+
+function summonSlotEnd(k) {
+  const s = CAL.summon;
+  const first = dayNumber(s.first);
+  return dayStartMs(first + (Math.floor((k - first) / s.days) + 1) * s.days);
+}
+
+const isIncompleteDay = (k) => CAL.unknown.some((u) => mod(k - dayNumber(u), CAL.cycle_days) === 0);
+
+function formatDuration(ms) {
+  const mins = Math.max(0, Math.ceil(ms / 60000));
+  return `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
+}
+
+function formatDayTime(ms) {
+  return new Intl.DateTimeFormat(lang, { weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(ms));
+}
+
 function renderSummon() {
+  const now = currentGameDay();
+  const current = summonSlot(now);
+  const cur = STATIC.summon[current];
+  const next = STATIC.summon[(current + 1) % STATIC.summon.length];
   $view.append(
+    // The current slot sits well below the fold on a phone -- say it up top.
+    h("div", { class: "calday today summon-now" },
+      cur.portrait ? h("img", { src: "img/" + cur.portrait, alt: "", width: 42, height: 58 }) : null,
+      h("div", {},
+        h("b", {}, `${t("now")}: ${cur.name} (#${current + 1})`),
+        h("div", { class: "status" }, t("until", { time: formatDayTime(summonSlotEnd(now)) }), ` → ${next.name}`))),
     h("p", { class: "hint" }, t("summon_mastery_hint")),
     h("ol", { class: "summon", style: "list-style:none;padding:0;margin:0" },
-      STATIC.summon.map((c, i) => h("li", { class: "captain" },
+      STATIC.summon.map((c, i) => h("li", { class: i === current ? "captain now" : "captain" },
         h("span", { class: "pos" }, "#" + (i + 1)),
         c.portrait ? h("img", { src: "img/" + c.portrait, alt: c.name, width: 84, height: 116, loading: "lazy" }) : null,
-        h("span", { class: "nm" }, c.name)))),
+        h("span", { class: "nm" }, c.name),
+        i === current
+          ? h("span", { class: "now-badge" }, t("now"), " · ", t("until", { time: formatDayTime(summonSlotEnd(now)) }))
+          : null))),
   );
 }
 
@@ -397,7 +522,60 @@ function updatedText(iso) {
   return iso ? t("events_updated_at", { time: formatClock(new Date(iso)) }) : "";
 }
 
-function renderEvents() {
+function renderEvents(sub) {
+  const tabs = [["", t("cal_main")], ["mini", t("cal_mini")]];
+  $view.append(h("nav", { class: "seg" }, tabs.map(([route, label]) => h("a", {
+    href: "#/events" + (route ? "/" + route : ""), "aria-current": sub === route ? "page" : null,
+  }, label))));
+  if (sub === "mini") renderMiniEvents();
+  else renderCalendar();
+}
+
+const CAL_DAYS_AHEAD = 30;
+// Only the first letter: some locales write weekdays lowercase ("чт"),
+// but month names must stay lowercase mid-phrase ("24 сентября").
+const capitalize = (s) => s.charAt(0).toLocaleUpperCase(lang) + s.slice(1);
+
+function renderCalendar() {
+  let today = currentGameDay();
+  const countdown = h("span");
+  const list = h("div", { class: "cal" });
+  $view.append(
+    h("p", { class: "hint" }, t("cal_note", { time: formatClock(new Date(dayStartMs(today))) })),
+    h("div", { class: "legend" }, ["monthly", "biweekly", "weekly"].map((k) => h("span", { class: "ev " + k }, t("kind_" + k)))),
+    list);
+
+  const dateFmt = new Intl.DateTimeFormat(lang, { weekday: "short", day: "numeric", month: "long", timeZone: "UTC" });
+  function draw() {
+    list.replaceChildren(...Array.from({ length: CAL_DAYS_AHEAD }, (_, i) => {
+      const k = today + i;
+      const captain = STATIC.summon[summonSlot(k)];
+      return h("section", { class: i === 0 ? "calday today" : "calday" },
+        h("div", { class: "calday-head" },
+          h("b", {}, capitalize(dateFmt.format(new Date(k * DAY)))),
+          i === 0 ? h("span", { class: "today-badge" }, t("today")) : null,
+          i === 0 ? h("span", { class: "status" }, countdown) : null),
+        h("div", { class: "evchips" }, eventsOnDay(k).map((e) => h("span", { class: "ev " + e.kind },
+          e.name,
+          e.stages ? h("small", {}, " · " + e.stages[e.dayOf]) : null,
+          !e.stages && e.span > 1 ? h("small", {}, ` · ${e.dayOf + 1}/${e.span}`) : null))),
+        isIncompleteDay(k) ? h("p", { class: "hint warn" }, t("cal_incomplete")) : null,
+        h("div", { class: "calcap", title: t("hints_section_summon_mastery") },
+          captain.portrait ? h("img", { src: "img/" + captain.portrait, alt: "", width: 24, height: 33, loading: "lazy" }) : null,
+          h("span", {}, "🎖 ", captain.name)));
+    }));
+  }
+  function tick() {
+    if (currentGameDay() !== today) { today = currentGameDay(); draw(); }
+    countdown.textContent = t("new_day_in", { time: formatDuration(dayStartMs(today + 1) - Date.now()) });
+  }
+  draw();
+  tick();
+  const timer = setInterval(tick, 30000);
+  cleanups.push(() => clearInterval(timer));
+}
+
+function renderMiniEvents() {
   const body = h("div");
   const status = liveToolbar(() => load_());
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
@@ -503,7 +681,8 @@ function route() {
   cleanups = [];
   $view.replaceChildren();
 
-  const name = location.hash.replace(/^#\/?/, "");
+  // "#/events/mini" -> section "events", sub-route "mini".
+  const [name, sub = ""] = location.hash.replace(/^#\/?/, "").split("/");
   const section = SECTIONS.find((s) => s.route === name);
   $back.hidden = !section;
   $back.setAttribute("aria-label", t("back"));
@@ -512,7 +691,7 @@ function route() {
 
   if (section) {
     $view.append(h("h1", { class: "visually-hidden" }, t(section.key)));
-    section.render();
+    section.render(sub);
   } else {
     renderHome();
   }
@@ -521,7 +700,8 @@ function route() {
 
 async function init() {
   try {
-    [I18N, STATIC] = await Promise.all([fetchJson("data/i18n.json"), fetchJson("data/static.json")]);
+    [I18N, STATIC, CAL] = await Promise.all(
+      [fetchJson("data/i18n.json"), fetchJson("data/static.json"), fetchJson("data/calendar.json")]);
   } catch (err) {
     $view.replaceChildren(errorBox("Failed to load data: " + err.message));
     return;

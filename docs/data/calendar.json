@@ -1,0 +1,28 @@
+{
+ "_about": "Hand-maintained. Main events repeat on fixed 6/12/24-day cycles of game days; a game day D runs from D 17:00 UTC to D+1 17:00 UTC. Each event: the first game day it was observed (from history/main_events_2026-09.txt), its period in days, and how many consecutive days it lasts (span, or one day per stage). Summon Mastery: captain `position` (1-based, in static.json's summon order) holds for `days` days starting on `first`. `unknown` = game days of the 24-day cycle not recorded yet; they repeat every 24 days.",
+ "day_start_utc_hour": 17,
+ "cycle_days": 24,
+ "unknown": ["2026-10-02"],
+ "events": [
+  {"name": "Trials of Olympus", "short": "Olympus", "kind": "monthly", "period": 24, "first": "2026-09-12", "stages": ["Chimera", "Basilisk", "Lava", "Tartaros", "Briareus"]},
+  {"name": "Hellforge", "short": "Hellforge", "kind": "monthly", "period": 24, "first": "2026-09-12", "span": 2},
+  {"name": "Ragnarok", "short": "Ragnarok", "kind": "monthly", "period": 24, "first": "2026-09-18", "span": 2},
+  {"name": "Armageddon", "short": "Armageddon", "kind": "monthly", "period": 24, "first": "2026-09-24", "span": 2},
+  {"name": "Dark Omens", "short": "Dark Omens", "kind": "monthly", "period": 24, "first": "2026-09-27", "span": 2},
+  {"name": "Shadow Invasion", "short": "S. Invasion", "kind": "monthly", "period": 24, "first": "2026-09-30", "span": 2},
+  {"name": "Clash of Kingdoms (KvK)", "short": "KvK", "kind": "biweekly", "period": 12, "first": "2026-09-12"},
+  {"name": "Clash for the Throne (CoT)", "short": "CoT", "kind": "biweekly", "period": 12, "first": "2026-09-17", "span": 2},
+  {"name": "Arachne's Swarm", "short": "Arachne", "kind": "weekly", "period": 6, "first": "2026-09-09"},
+  {"name": "Authority Rush", "short": "Authority", "kind": "weekly", "period": 6, "first": "2026-09-09"},
+  {"name": "Ruthless Slaughter", "short": "R. Slaughter", "kind": "weekly", "period": 6, "first": "2026-09-10"},
+  {"name": "Research of Ancients (RoA)", "short": "RoA", "kind": "weekly", "period": 6, "first": "2026-09-10"},
+  {"name": "Rise of the Ancients (TinMan)", "short": "TinMan", "kind": "weekly", "period": 6, "first": "2026-09-11"},
+  {"name": "Mercenary Exchange", "short": "Mercs", "kind": "weekly", "period": 6, "first": "2026-09-11"},
+  {"name": "The Great Hunt", "short": "GH", "kind": "weekly", "period": 6, "first": "2026-09-13"},
+  {"name": "Pursuit of Evolution", "short": "Evolution", "kind": "weekly", "period": 6, "first": "2026-09-13"},
+  {"name": "Immortal Essence", "short": "Essence", "kind": "weekly", "period": 6, "first": "2026-09-13"},
+  {"name": "Doomsday", "short": "Doomsday", "kind": "weekly", "period": 6, "first": "2026-09-14"},
+  {"name": "Pursuit of Experience", "short": "Experience", "kind": "weekly", "period": 6, "first": "2026-09-14"}
+ ],
+ "summon": {"first": "2026-09-09", "position": 10, "days": 2}
+}

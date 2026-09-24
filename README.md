@@ -52,6 +52,27 @@ absolute time fits all snapshots, and the site only shows about 1.5 days ahead.
 Once the history covers a full loop, the schedule could be predicted without
 the site, with the scraper kept only to re-sync the current position.
 
+## Main-event calendar
+
+The Events section's default tab shows the next 30 game days of main events
+and the Summon Mastery captain for each day. The browser computes them from
+`docs/data/calendar.json`, which is maintained by hand. No scraping is
+involved.
+
+- A game day `D` runs from `D 17:00 UTC` to `D+1 17:00 UTC`.
+- Every main event repeats every 6, 12 or 24 days. Each entry is the first
+  observed day (`first`), the `period`, and the number of consecutive days
+  (`span`, or one day per entry in `stages`).
+- Summon Mastery: the captain at `position` (1-based, in the order of the
+  Summon Mastery section) holds for `days` days starting on `first`. The loop
+  is 24 slots × 2 days = 48 days.
+- `unknown` lists days of the 24-day cycle whose monthly/biweekly events
+  haven't been recorded yet. The site marks those days as incomplete.
+
+The source for the entries is the player-supplied list in
+`history/main_events_2026-09.txt`. If the game shifts a cycle, edit that
+event's `first`.
+
 ## Updating static data from tb_farm
 
 ```

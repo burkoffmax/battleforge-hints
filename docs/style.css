@@ -220,3 +220,34 @@ th .res { width: 26px; height: 26px; margin: 0 auto; }
 footer.credits { margin-top: 28px; color: var(--fg-muted); font-size: 12.5px; }
 
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* events: main/mini tabs (links styled like .seg buttons) */
+.seg a {
+  flex: none; display: inline-flex; align-items: center; min-height: 36px; padding: 6px 14px;
+  background: var(--bg-btn); border-radius: 999px; color: var(--fg); text-decoration: none; font-size: 14px; white-space: nowrap;
+}
+.seg a[aria-current="page"] { background: var(--bg-btn-active); color: var(--fg-title); box-shadow: inset 0 0 0 1px var(--fg-title); }
+
+/* main-event calendar */
+.legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.cal { display: grid; gap: 8px; }
+@media (min-width: 900px) { .cal { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.calday { background: var(--bg-alt); border-radius: var(--radius); padding: 10px 12px; }
+.calday.today { box-shadow: inset 0 0 0 1px var(--fg-title); }
+.calday-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-bottom: 8px; }
+.summon-now { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.summon-now img { width: 42px; height: 58px; flex: none; }
+.today-badge { background: var(--bg-btn-active); color: var(--fg-title); border-radius: 999px; padding: 1px 9px; font-size: 12.5px; font-weight: 600; }
+.calday-head .status { margin-left: auto; font-variant-numeric: tabular-nums; }
+.evchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ev { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--bg-btn); font-size: 13.5px; line-height: 1.35; }
+.ev small { color: var(--fg-muted); font-size: 12px; }
+.ev.monthly { color: var(--warn); box-shadow: inset 0 0 0 1px #e0c88066; }
+.ev.biweekly { color: var(--fg-title); box-shadow: inset 0 0 0 1px #8fd3ff55; }
+.calday .hint { margin: 8px 0 0; font-size: 12.5px; }
+.calcap { display: flex; align-items: center; gap: 8px; margin-top: 8px; color: var(--fg-muted); font-size: 13px; }
+.calcap img { width: 24px; height: 33px; }
+
+/* summon mastery: current captain */
+.captain.now { box-shadow: inset 0 0 0 2px var(--fg-title); }
+.now-badge { color: var(--fg-title); font-size: 12px; text-align: center; }
