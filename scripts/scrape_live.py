@@ -29,6 +29,9 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "docs", "data")
+# Outside docs/ -- raw material for working out the event rotation, not
+# something the site itself reads (see record_history).
+HISTORY_PATH = os.path.join(ROOT, "history", "events.json")
 
 EVENTS_URL = "https://akurier.pl/events"
 GIFTS_URL = "https://tbgift.pages.dev/"
@@ -100,7 +103,13 @@ def _parse_event_rows(html_chunk: str, offset: dt.timedelta) -> list[dict]:
 
 def scrape_events() -> dict:
     html = _fetch(EVENTS_URL)
-    fetched_at = _now_utc()
+    return parse_events_html(html, _now_utc())
+
+
+def parse_events_html(html: str, fetched_at: dt.datetime) -> dict:
+    """`fetched_at` (naive UTC) is when the page was captured -- the
+    live fetch time, or a Wayback Machine snapshot's timestamp (see
+    seed_events_history.py)."""
     match = _CURRENT_DATE_RE.search(html)
     if not match:
         raise ScrapeError("events: site clock not found -- page layout may have changed")
@@ -163,11 +172,51 @@ def _write_json(name: str, payload: dict) -> bool:
     return True
 
 
+def record_history(events: dict, seen: str) -> int:
+    """Appends every not-yet-recorded event to history/events.json and
+    returns how many were new.
+
+    Why keep this at all: the schedule looks like one long fixed sequence
+    of events (each with a fixed duration, back to back) that both server
+    types play from different, occasionally jumping, positions -- the
+    Sept 2026 main-server run matches Jan 2025 ten events in a row, and
+    the SK run matches May 2025's main server. The site only shows ~1.5
+    days ahead, so the full sequence has to be accumulated over time
+    before the schedule could be predicted without the site. Keyed on
+    (server, start, name) so a re-scheduled slot keeps both entries."""
+    try:
+        with open(HISTORY_PATH, encoding="utf-8") as f:
+            history = json.load(f)
+    except (OSError, ValueError):
+        history = []
+    known = {(e["server"], e["start"], e["name"]) for e in history}
+    added = 0
+    for server in ("main", "sk"):
+        for row in events.get(server, []):
+            key = (server, row["start"], row["name"])
+            if key in known:
+                continue
+            known.add(key)
+            history.append({"server": server, **row, "seen": seen})
+            added += 1
+    if added:
+        history.sort(key=lambda e: (e["server"], e["start"]))
+        os.makedirs(os.path.dirname(HISTORY_PATH), exist_ok=True)
+        with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+            # One event per line: diffs of the hourly commits stay readable.
+            f.write("[\n" + ",\n".join(json.dumps(e, ensure_ascii=False) for e in history) + "\n]\n")
+    return added
+
+
 def main() -> int:
     failures = 0
     for name, scraper in (("events.json", scrape_events), ("gifts.json", scrape_gifts)):
         try:
-            changed = _write_json(name, scraper())
+            payload = scraper()
+            if name == "events.json":
+                added = record_history(payload, "live " + _now_utc().strftime("%Y-%m-%dT%H:%MZ"))
+                print(f"history: +{added} events")
+            changed = _write_json(name, payload)
             print(f"{name}: {'updated' if changed else 'unchanged'}")
         except ScrapeError as exc:
             # One source being down must not block refreshing the other;

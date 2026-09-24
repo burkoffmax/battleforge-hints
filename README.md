@@ -36,6 +36,22 @@ JSON instead. The site computes countdowns itself from the UTC start
 times, so they stay accurate between refreshes. Gifts are scraped the
 same way to keep one data path for both.
 
+## Event history
+
+`history/events.json` records every event the site has ever shown (one per
+line, UTC start times, deduplicated), appended by the hourly job. It is seeded
+from Wayback Machine snapshots back to Nov 2024 (`scripts/seed_events_history.py`,
+safe to re-run).
+
+Why: the schedule looks like one long fixed sequence of events. Each event
+has a fixed duration (2, 3.5 or 5 h) and they run back to back. Both server
+types play that sequence from different positions that occasionally jump. For
+example, the Sept 2026 main-server run matches Jan 2025 ten events in a row,
+and the Sept 2026 SK run matches May 2025's main server. No fixed period in
+absolute time fits all snapshots, and the site only shows about 1.5 days ahead.
+Once the history covers a full loop, the schedule could be predicted without
+the site, with the scraper kept only to re-sync the current position.
+
 ## Updating static data from tb_farm
 
 ```
