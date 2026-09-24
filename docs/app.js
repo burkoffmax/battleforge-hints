@@ -96,11 +96,14 @@ function t(key, vars) {
   return text;
 }
 
-// English unless the viewer picked something else in the header (no
-// browser-locale auto-detection -- deliberately English by default).
 function pickLanguage() {
   const saved = load("lang", null);
-  return saved && I18N.languages[saved] ? saved : "en";
+  if (saved && I18N.languages[saved]) return saved;
+  for (const tag of navigator.languages || [navigator.language || "en"]) {
+    const code = String(tag).slice(0, 2).toLowerCase();
+    if (I18N.languages[code]) return code;
+  }
+  return "en";
 }
 
 // -- numbers (port of tb_farm app/ui/number_format.py) -------------------
