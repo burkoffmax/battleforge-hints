@@ -7,8 +7,9 @@ const SITE_STRINGS = {
     source: "Source: {link}", no_data: "No data yet.",
     cal_main: "Main events",
     cal_mini: "Mini events",
-    today: "Today",
-    new_day_in: "New day in {time}",
+    cal_running: "In progress",
+    cal_ends_in: "Ends in {time}",
+    cal_from: "from {time}",
     cal_note: "A game day starts at {time} your time. Dates are calculated from the game's fixed cycles (6, 12 and 24 days), so the game may occasionally deviate.",
     cal_incomplete: "Some events of this day are not recorded yet.",
     kind_monthly: "Every 24 days",
@@ -23,8 +24,9 @@ const SITE_STRINGS = {
     source: "Источник: {link}", no_data: "Данных пока нет.",
     cal_main: "Основные события",
     cal_mini: "Мини-события",
-    today: "Сегодня",
-    new_day_in: "Новый день через {time}",
+    cal_running: "Идёт сейчас",
+    cal_ends_in: "Закончится через {time}",
+    cal_from: "с {time}",
     cal_note: "Игровой день начинается в {time} по вашему времени. Даты рассчитаны по фиксированным циклам игры (6, 12 и 24 дня), поэтому игра изредка может отклоняться.",
     cal_incomplete: "Часть событий этого дня ещё не записана.",
     kind_monthly: "Раз в 24 дня",
@@ -39,8 +41,9 @@ const SITE_STRINGS = {
     source: "Source : {link}", no_data: "Pas encore de données.",
     cal_main: "Événements principaux",
     cal_mini: "Mini-événements",
-    today: "Aujourd'hui",
-    new_day_in: "Nouveau jour dans {time}",
+    cal_running: "En cours",
+    cal_ends_in: "Se termine dans {time}",
+    cal_from: "dès {time}",
     cal_note: "Une journée de jeu commence à {time} (votre heure). Dates calculées d'après les cycles fixes du jeu (6, 12 et 24 jours) ; le jeu peut parfois s'en écarter.",
     cal_incomplete: "Certains événements de ce jour ne sont pas encore enregistrés.",
     kind_monthly: "Tous les 24 jours",
@@ -55,8 +58,9 @@ const SITE_STRINGS = {
     source: "Quelle: {link}", no_data: "Noch keine Daten.",
     cal_main: "Hauptevents",
     cal_mini: "Mini-Events",
-    today: "Heute",
-    new_day_in: "Neuer Tag in {time}",
+    cal_running: "Läuft gerade",
+    cal_ends_in: "Endet in {time}",
+    cal_from: "ab {time}",
     cal_note: "Ein Spieltag beginnt um {time} (deine Zeit). Termine sind aus den festen Zyklen des Spiels (6, 12 und 24 Tage) berechnet; das Spiel kann gelegentlich abweichen.",
     cal_incomplete: "Einige Events dieses Tages sind noch nicht erfasst.",
     kind_monthly: "Alle 24 Tage",
@@ -71,8 +75,9 @@ const SITE_STRINGS = {
     source: "Fonte: {link}", no_data: "Ainda sem dados.",
     cal_main: "Eventos principais",
     cal_mini: "Mini eventos",
-    today: "Hoje",
-    new_day_in: "Novo dia em {time}",
+    cal_running: "Em andamento",
+    cal_ends_in: "Termina em {time}",
+    cal_from: "a partir das {time}",
     cal_note: "Um dia de jogo começa às {time} no seu horário. As datas são calculadas pelos ciclos fixos do jogo (6, 12 e 24 dias), então o jogo pode ocasionalmente variar.",
     cal_incomplete: "Alguns eventos deste dia ainda não foram registrados.",
     kind_monthly: "A cada 24 dias",
@@ -87,8 +92,9 @@ const SITE_STRINGS = {
     source: "Kaynak: {link}", no_data: "Henüz veri yok.",
     cal_main: "Ana etkinlikler",
     cal_mini: "Mini etkinlikler",
-    today: "Bugün",
-    new_day_in: "Yeni gün: {time}",
+    cal_running: "Şu an sürüyor",
+    cal_ends_in: "{time} içinde biter",
+    cal_from: "{time} itibarıyla",
     cal_note: "Oyun günü sizin saatinizle {time} itibarıyla başlar. Tarihler oyunun sabit döngülerinden (6, 12 ve 24 gün) hesaplanır; oyun zaman zaman sapabilir.",
     cal_incomplete: "Bu günün bazı etkinlikleri henüz kaydedilmedi.",
     kind_monthly: "24 günde bir",
@@ -511,6 +517,13 @@ function renderCalendar() {
     list);
 
   const dateFmt = new Intl.DateTimeFormat(lang, { weekday: "short", day: "numeric", month: "long", timeZone: "UTC" });
+  const startLabel = (k) => {
+    const start = new Date(dayStartMs(k));
+    const label = new Date(k * DAY);
+    const sameDate = start.getFullYear() === label.getUTCFullYear()
+      && start.getMonth() === label.getUTCMonth() && start.getDate() === label.getUTCDate();
+    return t("cal_from", { time: sameDate ? formatClock(start) : formatDayTime(start.getTime()) });
+  };
   function draw() {
     list.replaceChildren(...Array.from({ length: CAL_DAYS_AHEAD }, (_, i) => {
       const k = today + i;
@@ -518,7 +531,8 @@ function renderCalendar() {
       return h("section", { class: i === 0 ? "calday today" : "calday" },
         h("div", { class: "calday-head" },
           h("b", {}, capitalize(dateFmt.format(new Date(k * DAY)))),
-          i === 0 ? h("span", { class: "today-badge" }, t("today")) : null,
+          h("span", { class: "day-start" }, "· " + startLabel(k)),
+          i === 0 ? h("span", { class: "today-badge" }, t("cal_running")) : null,
           i === 0 ? h("span", { class: "status" }, countdown) : null),
         h("div", { class: "evchips" }, eventsOnDay(k).map((e) => h("span", { class: "ev " + e.kind },
           e.name,
@@ -532,7 +546,7 @@ function renderCalendar() {
   }
   function tick() {
     if (currentGameDay() !== today) { today = currentGameDay(); draw(); }
-    countdown.textContent = t("new_day_in", { time: formatDuration(dayStartMs(today + 1) - Date.now()) });
+    countdown.textContent = t("cal_ends_in", { time: formatDuration(dayStartMs(today + 1) - Date.now()) });
   }
   draw();
   tick();
