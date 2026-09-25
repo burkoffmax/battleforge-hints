@@ -1,11 +1,6 @@
 {
- "updated": "2026-09-25T13:38:00Z",
+ "updated": "2026-09-25T18:29:00Z",
  "main": [
-  {
-   "start": "2026-09-25T12:00:00Z",
-   "name": "Capital Challenge",
-   "bonus": "+50% RS gather. speed"
-  },
   {
    "start": "2026-09-25T14:00:00Z",
    "name": "Gold Rush",
@@ -50,14 +45,14 @@
    "start": "2026-09-26T18:00:00Z",
    "name": "Castle Development",
    "bonus": "+10% constr. speed"
+  },
+  {
+   "start": "2026-09-26T21:30:00Z",
+   "name": "Blessing of the Good",
+   "bonus": "+10% health"
   }
  ],
  "sk": [
-  {
-   "start": "2026-09-25T11:30:00Z",
-   "name": "Wargames",
-   "bonus": "+10% strength, health"
-  },
   {
    "start": "2026-09-25T16:30:00Z",
    "name": "Tar Mastery",
@@ -102,6 +97,11 @@
    "start": "2026-09-26T20:30:00Z",
    "name": "Hammer and Anvil",
    "bonus": "+10% crypt efficiency"
+  },
+  {
+   "start": "2026-09-26T22:30:00Z",
+   "name": "Blessing of the Good",
+   "bonus": "+10% health"
   }
  ]
 }
