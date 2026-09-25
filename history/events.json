@@ -107,6 +107,8 @@
 {"server": "main", "start": "2026-09-26T07:00:00Z", "name": "The King's Mercy", "bonus": "+10% health", "seen": "live 2026-09-25T07:31Z"},
 {"server": "main", "start": "2026-09-26T09:00:00Z", "name": "Battle Training", "bonus": "+5% dominance", "seen": "live 2026-09-25T07:31Z"},
 {"server": "main", "start": "2026-09-26T12:30:00Z", "name": "Power Points", "bonus": "+35% all RS prod.", "seen": "live 2026-09-25T07:31Z"},
+{"server": "main", "start": "2026-09-26T16:00:00Z", "name": "Hammer and Anvil", "bonus": "+10% crypt efficiency", "seen": "live 2026-09-25T13:38Z"},
+{"server": "main", "start": "2026-09-26T18:00:00Z", "name": "Castle Development", "bonus": "+10% constr. speed", "seen": "live 2026-09-25T13:38Z"},
 {"server": "sk", "start": "2026-01-20T11:30:00Z", "name": "Regular Decrees", "bonus": "+10% health", "seen": "wayback 20260120123650"},
 {"server": "sk", "start": "2026-01-20T15:00:00Z", "name": "Officer Academy", "bonus": "+10% strength", "seen": "wayback 20260120123650"},
 {"server": "sk", "start": "2026-01-20T20:00:00Z", "name": "Tar Mastery", "bonus": "+10% crypt efficiency", "seen": "wayback 20260120123650"},
@@ -151,5 +153,7 @@
 {"server": "sk", "start": "2026-09-26T01:30:00Z", "name": "Beastslayer", "bonus": "+10% strength, health", "seen": "live 2026-09-24T20:22Z"},
 {"server": "sk", "start": "2026-09-26T06:30:00Z", "name": "Silver Rush", "bonus": "+20% food, silver prod.", "seen": "live 2026-09-25T07:31Z"},
 {"server": "sk", "start": "2026-09-26T10:00:00Z", "name": "Battle Training", "bonus": "+5% dominance", "seen": "live 2026-09-25T07:31Z"},
-{"server": "sk", "start": "2026-09-26T13:30:00Z", "name": "Officer Academy", "bonus": "+10% strength", "seen": "live 2026-09-25T07:31Z"}
+{"server": "sk", "start": "2026-09-26T13:30:00Z", "name": "Officer Academy", "bonus": "+10% strength", "seen": "live 2026-09-25T07:31Z"},
+{"server": "sk", "start": "2026-09-26T18:30:00Z", "name": "The Quest for Chests", "bonus": "+35% all RS prod.", "seen": "live 2026-09-25T13:38Z"},
+{"server": "sk", "start": "2026-09-26T20:30:00Z", "name": "Hammer and Anvil", "bonus": "+10% crypt efficiency", "seen": "live 2026-09-25T13:38Z"}
 ]

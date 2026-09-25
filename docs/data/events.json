@@ -1,16 +1,6 @@
 {
- "updated": "2026-09-25T07:31:00Z",
+ "updated": "2026-09-25T13:38:00Z",
  "main": [
-  {
-   "start": "2026-09-25T03:30:00Z",
-   "name": "Crypt Raiders",
-   "bonus": "+10% crypt efficiency"
-  },
-  {
-   "start": "2026-09-25T08:30:00Z",
-   "name": "Call of Duty",
-   "bonus": "+10% strength"
-  },
   {
    "start": "2026-09-25T12:00:00Z",
    "name": "Capital Challenge",
@@ -50,19 +40,19 @@
    "start": "2026-09-26T12:30:00Z",
    "name": "Power Points",
    "bonus": "+35% all RS prod."
+  },
+  {
+   "start": "2026-09-26T16:00:00Z",
+   "name": "Hammer and Anvil",
+   "bonus": "+10% crypt efficiency"
+  },
+  {
+   "start": "2026-09-26T18:00:00Z",
+   "name": "Castle Development",
+   "bonus": "+10% constr. speed"
   }
  ],
  "sk": [
-  {
-   "start": "2026-09-25T04:30:00Z",
-   "name": "Castle Development",
-   "bonus": "+10% constr. speed"
-  },
-  {
-   "start": "2026-09-25T08:00:00Z",
-   "name": "Power Points",
-   "bonus": "+35% all RS prod."
-  },
   {
    "start": "2026-09-25T11:30:00Z",
    "name": "Wargames",
@@ -102,6 +92,16 @@
    "start": "2026-09-26T13:30:00Z",
    "name": "Officer Academy",
    "bonus": "+10% strength"
+  },
+  {
+   "start": "2026-09-26T18:30:00Z",
+   "name": "The Quest for Chests",
+   "bonus": "+35% all RS prod."
+  },
+  {
+   "start": "2026-09-26T20:30:00Z",
+   "name": "Hammer and Anvil",
+   "bonus": "+10% crypt efficiency"
   }
  ]
 }
