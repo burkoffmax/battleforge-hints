@@ -1,5 +1,4 @@
 {
- "_about": "Hand-maintained. Main events repeat on fixed 6/12/24-day cycles of game days; a game day D runs from D 17:00 UTC to D+1 17:00 UTC. Each event: the first game day it was observed (from history/main_events_2026-09.txt), its period in days, and how many consecutive days it lasts (span, or one day per stage). Summon Mastery: captain `position` (1-based, in static.json's summon order) holds for `days` days starting on `first`. `unknown` = game days of the 24-day cycle not recorded yet; they repeat every 24 days.",
  "day_start_utc_hour": 17,
  "cycle_days": 24,
  "unknown": ["2026-10-02"],

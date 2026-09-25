@@ -1,12 +1,3 @@
-"""Backfills history/events.json from Wayback Machine snapshots of
-akurier.pl/events, so the event history (see scrape_live.record_history
-for why it's kept) doesn't start from zero.
-
-Safe to re-run: already-recorded events are skipped, so new snapshots
-archive.org picks up later just add to the history.
-
-    python scripts/seed_events_history.py
-"""
 from __future__ import annotations
 
 import datetime as dt
@@ -19,12 +10,10 @@ import urllib.request
 import scrape_live
 
 CDX_URL = "https://web.archive.org/cdx/search/cdx?url=akurier.pl/events&output=json&fl=timestamp,statuscode&collapse=digest"
-# "id_" = the page exactly as captured, without the Wayback toolbar markup.
 SNAPSHOT_URL = "https://web.archive.org/web/{ts}id_/https://akurier.pl/events"
 
 
 def _get(url: str, attempts: int = 5) -> str:
-    # archive.org rate-limits bursts with 503/429 -- back off and retry.
     for attempt in range(attempts):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -43,8 +32,6 @@ def main() -> int:
     for ts, status in rows:
         if status != "200":
             continue
-        # The snapshot timestamp is UTC capture time, which is what
-        # parse_events_html needs to work out the site clock's offset.
         captured = dt.datetime.strptime(ts, "%Y%m%d%H%M%S").replace(second=0)
         try:
             events = scrape_live.parse_events_html(_get(SNAPSHOT_URL.format(ts=ts)), captured)

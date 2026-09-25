@@ -1,22 +1,3 @@
-"""Refreshes the two "live" data files the site shows: the mini-events
-schedule (docs/data/events.json) and the gift-code list
-(docs/data/gifts.json).
-
-Runs hourly from .github/workflows/refresh.yml -- a browser can't scrape
-these itself: akurier.pl sends no CORS headers at all, so a fetch() from
-the GitHub Pages origin is blocked outright. (tbgift.pages.dev does allow
-CORS, but scraping both here keeps the client down to "read a JSON file"
-for every section, with one parser per source instead of two.)
-
-Stdlib only, so the workflow needs no `pip install` step. Parsers are
-ported from tb_farm's app/ui/events_schedule_data.py and
-app/ui/gifts_data.py -- if the desktop app's regexes get fixed for a
-markup change, the same fix belongs here.
-
-Each file is only rewritten when its *content* changed (see _write_json),
-so the workflow's "commit if anything changed" step doesn't produce an
-hourly no-op commit just because a timestamp moved.
-"""
 from __future__ import annotations
 
 import datetime as dt
@@ -29,15 +10,12 @@ import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "docs", "data")
-# Outside docs/ -- raw material for working out the event rotation, not
-# something the site itself reads (see record_history).
 HISTORY_PATH = os.path.join(ROOT, "history", "events.json")
 
 EVENTS_URL = "https://akurier.pl/events"
 GIFTS_URL = "https://tbgift.pages.dev/"
 _TIMEOUT_SECONDS = 20
 
-# -- events ------------------------------------------------------------------
 _ROW_RE = re.compile(
     r"<tr style='background-color:[^']*'>\s*"
     r"<td>([^<]*)</td>\s*<td>([^<]*)</td>\s*<td>(.*?)</td>\s*<td>([^<]*)</td>\s*<td>([^<]*)</td>\s*</tr>",
@@ -48,7 +26,6 @@ _CURRENT_DATE_RE = re.compile(r"Current date \(CET\):\s*<br>\s*([^<]+?)\s*<br>")
 _SK_MARKER = "for SK below:"
 _SITE_TIME_FORMAT = "%d.%m.%Y %H:%M"
 
-# -- gifts -------------------------------------------------------------------
 _SECTION_RE = re.compile(r"<H3>(.*?)</H3>", re.DOTALL)
 _ITEM_RE = re.compile(r"<li><b>([^<]*?):</b>.*?\(([^)]*)\):(.*?)</li>", re.DOTALL)
 _LINK_RE = re.compile(r'<a href="([^"]*)">\s*([^<]*?)\s*</a>')
@@ -76,11 +53,6 @@ def _now_utc() -> dt.datetime:
 
 
 def _site_offset(current_date: str, fetched_at: dt.datetime) -> dt.timedelta:
-    """How far the site's own wall clock is ahead of UTC, rounded to 15
-    minutes. The page labels its times "CET" but actually follows
-    CET/CEST daylight saving -- measuring the offset from its printed
-    "current date" (instead of hard-coding +1/+2) stays right across DST
-    switches and even if the author moves the site to another zone."""
     site_now = dt.datetime.strptime(current_date, _SITE_TIME_FORMAT)
     quarter_hours = round((site_now - fetched_at).total_seconds() / 900)
     return dt.timedelta(minutes=15 * quarter_hours)
@@ -91,7 +63,7 @@ def _parse_event_rows(html_chunk: str, offset: dt.timedelta) -> list[dict]:
     for match in _ROW_RE.finditer(html_chunk):
         date, time, name, _countdown, bonus = (_strip_tags(g) for g in match.groups())
         if date == "Start date:":
-            continue  # header row, not a real event
+            continue
         try:
             start_site = dt.datetime.strptime(f"{date} {time}", _SITE_TIME_FORMAT)
         except ValueError:
@@ -107,9 +79,6 @@ def scrape_events() -> dict:
 
 
 def parse_events_html(html: str, fetched_at: dt.datetime) -> dict:
-    """`fetched_at` (naive UTC) is when the page was captured -- the
-    live fetch time, or a Wayback Machine snapshot's timestamp (see
-    seed_events_history.py)."""
     match = _CURRENT_DATE_RE.search(html)
     if not match:
         raise ScrapeError("events: site clock not found -- page layout may have changed")
@@ -152,9 +121,6 @@ def scrape_gifts() -> dict:
 
 
 def _write_json(name: str, payload: dict) -> bool:
-    """Writes docs/data/<name> with an `updated` stamp, but only if the
-    payload itself differs from what's already there. Returns whether
-    the file was written."""
     path = os.path.join(DATA_DIR, name)
     try:
         with open(path, encoding="utf-8") as f:
@@ -173,17 +139,6 @@ def _write_json(name: str, payload: dict) -> bool:
 
 
 def record_history(events: dict, seen: str) -> int:
-    """Appends every not-yet-recorded event to history/events.json and
-    returns how many were new.
-
-    Why keep this at all: the schedule looks like one long fixed sequence
-    of events (each with a fixed duration, back to back) that both server
-    types play from different, occasionally jumping, positions -- the
-    Sept 2026 main-server run matches Jan 2025 ten events in a row, and
-    the SK run matches May 2025's main server. The site only shows ~1.5
-    days ahead, so the full sequence has to be accumulated over time
-    before the schedule could be predicted without the site. Keyed on
-    (server, start, name) so a re-scheduled slot keeps both entries."""
     try:
         with open(HISTORY_PATH, encoding="utf-8") as f:
             history = json.load(f)
@@ -203,7 +158,6 @@ def record_history(events: dict, seen: str) -> int:
         history.sort(key=lambda e: (e["server"], e["start"]))
         os.makedirs(os.path.dirname(HISTORY_PATH), exist_ok=True)
         with open(HISTORY_PATH, "w", encoding="utf-8") as f:
-            # One event per line: diffs of the hourly commits stay readable.
             f.write("[\n" + ",\n".join(json.dumps(e, ensure_ascii=False) for e in history) + "\n]\n")
     return added
 
@@ -219,8 +173,6 @@ def main() -> int:
             changed = _write_json(name, payload)
             print(f"{name}: {'updated' if changed else 'unchanged'}")
         except ScrapeError as exc:
-            # One source being down must not block refreshing the other;
-            # the previous file stays in place and the site keeps showing it.
             print(f"{name}: FAILED -- {exc}", file=sys.stderr)
             failures += 1
     return 1 if failures == 2 else 0

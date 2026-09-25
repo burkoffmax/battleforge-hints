@@ -1,18 +1,3 @@
-"""Pulls the static reference data (research/building costs, dragon
-evolution, Summon Mastery order, translations) and the images it needs
-out of a local tb_farm checkout into docs/, so the site stays a
-standalone project with no runtime dependency on tb_farm.
-
-Run it again whenever those tables change in the desktop app:
-
-    python scripts/import_from_tb_farm.py [path/to/tb_farm]
-
-(default path: ../tb_farm). Needs Pillow. tb_farm's app/ui/*_data.py
-modules are plain Python with no Qt import, so they're imported directly;
-the two bits that only live inside Qt window modules (Summon Mastery's
-ORDER list, research-row icon resolution) are read via `ast` / re-ported
-here instead of importing PySide6.
-"""
 from __future__ import annotations
 
 import ast
@@ -29,19 +14,14 @@ DOCS = os.path.join(ROOT, "docs")
 DATA_DIR = os.path.join(DOCS, "data")
 IMG_DIR = os.path.join(DOCS, "img")
 
-# Everything the Hints tab and its six windows show; anything else in
-# tb_farm's i18n table belongs to the bot UI and is left out.
 _I18N_PREFIXES = (
     "hints_", "research_costs_", "building_costs_", "dragon_evolution_",
     "events_", "gifts_", "summon_mastery_",
 )
 
-# 2x the size the site displays them at, for sharp rendering on
-# high-DPI phone screens.
 _RESEARCH_ICON_PX = 96
 _PORTRAIT_W, _PORTRAIT_H = 168, 232
 
-# Ported from tb_farm app/ui_qt/research_cost_window.py -- see there.
 _CATEGORY_ICON_PREFIX = {
     "guardsmen1": "guard", "guardsmen2": "guard",
     "specialists1": "spec", "specialists2": "spec",
@@ -72,7 +52,6 @@ def _captain_slug(name: str) -> str:
 
 
 def _find_ci(directory: str, stem: str) -> str | None:
-    """Icon files mix .png/.PNG -- match the stem case-insensitively."""
     target = f"{stem}.png"
     for entry in os.listdir(directory):
         if entry.lower() == target:
@@ -113,9 +92,6 @@ def _research_icon(research_dir: str, name: str, category_key: str) -> str | Non
 
 
 def _portrait(captains_dir: str, name: str) -> str | None:
-    """Same crop-to-visible-content + "contain" fit as tb_farm's
-    SummonMasteryWindow._load_portrait, baked into the file here so the
-    browser just shows it."""
     slug = _captain_slug(name)
     path = _find_ci(captains_dir, slug)
     if path is None:
@@ -205,8 +181,6 @@ def main(tb_farm: str):
     os.makedirs(DATA_DIR, exist_ok=True)
     _dump("static.json", {"research": research, "buildings": buildings, "dragon": dragon, "summon": summon})
     _dump("i18n.json", {"languages": i18n.LANGUAGE_NAMES, "strings": translations})
-    # Seed gifts.json with the desktop app's bundled snapshot only if the
-    # scraper hasn't produced a live one yet.
     gifts_path = os.path.join(DATA_DIR, "gifts.json")
     if not os.path.exists(gifts_path):
         _dump("gifts.json", {"updated": None, "sections": LOCAL_SECTIONS})
