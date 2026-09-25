@@ -1,7 +1,7 @@
 {
  "day_start_utc_hour": 17,
  "cycle_days": 24,
- "unknown": ["2026-10-02"],
+ "unknown": [],
  "events": [
   {"name": "Trials of Olympus", "short": "Olympus", "kind": "monthly", "period": 24, "first": "2026-09-12", "stages": ["Chimera", "Basilisk", "Lava", "Tartaros", "Briareus"]},
   {"name": "Hellforge", "short": "Hellforge", "kind": "monthly", "period": 24, "first": "2026-09-12", "span": 2},
@@ -9,8 +9,12 @@
   {"name": "Armageddon", "short": "Armageddon", "kind": "monthly", "period": 24, "first": "2026-09-24", "span": 2},
   {"name": "Dark Omens", "short": "Dark Omens", "kind": "monthly", "period": 24, "first": "2026-09-27", "span": 2},
   {"name": "Shadow Invasion", "short": "S. Invasion", "kind": "monthly", "period": 24, "first": "2026-09-30", "span": 2},
+  {"name": "Dragon's Path & Fair", "short": "Dragon's Path", "kind": "monthly", "period": 24, "first": "2026-10-01"},
+  {"name": "Restoration of Balance", "short": "Restoration", "kind": "monthly", "period": 24, "first": "2026-09-27", "span": 2},
+  {"name": "Sealed in Flame", "short": "Sealed in Flame", "kind": "monthly", "period": 24, "first": "2026-10-07", "span": 2},
   {"name": "Clash of Kingdoms (KvK)", "short": "KvK", "kind": "biweekly", "period": 12, "first": "2026-09-12"},
   {"name": "Clash for the Throne (CoT)", "short": "CoT", "kind": "biweekly", "period": 12, "first": "2026-09-17", "span": 2},
+  {"name": "Clash for the Throne: voting", "short": "CoT voting", "kind": "biweekly", "period": 12, "first": "2026-10-01"},
   {"name": "Arachne's Swarm", "short": "Arachne", "kind": "weekly", "period": 6, "first": "2026-09-09"},
   {"name": "Authority Rush", "short": "Authority", "kind": "weekly", "period": 6, "first": "2026-09-09"},
   {"name": "Ruthless Slaughter", "short": "R. Slaughter", "kind": "weekly", "period": 6, "first": "2026-09-10"},
@@ -21,7 +25,10 @@
   {"name": "Pursuit of Evolution", "short": "Evolution", "kind": "weekly", "period": 6, "first": "2026-09-13"},
   {"name": "Immortal Essence", "short": "Essence", "kind": "weekly", "period": 6, "first": "2026-09-13"},
   {"name": "Doomsday", "short": "Doomsday", "kind": "weekly", "period": 6, "first": "2026-09-14"},
-  {"name": "Pursuit of Experience", "short": "Experience", "kind": "weekly", "period": 6, "first": "2026-09-14"}
+  {"name": "Pursuit of Experience", "short": "Experience", "kind": "weekly", "period": 6, "first": "2026-09-14"},
+  {"name": "Thirst for Battle", "short": "Thirst", "kind": "weekly", "period": 6, "first": "2026-09-24"},
+  {"name": "Conquerors' Revival", "short": "Revival", "kind": "weekly", "period": 6, "first": "2026-09-24"},
+  {"name": "Trade Routes", "short": "Trade Routes", "kind": "weekly", "period": 6, "first": "2026-09-29"}
  ],
  "summon": {"first": "2026-09-09", "position": 10, "days": 2}
 }
