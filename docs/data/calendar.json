@@ -20,15 +20,14 @@
   {"name": "Ruthless Slaughter", "short": "R. Slaughter", "kind": "weekly", "period": 6, "first": "2026-09-10"},
   {"name": "Ancients' Treasure", "short": "RoA", "kind": "weekly", "period": 6, "first": "2026-09-10"},
   {"name": "Rise of the Ancients (TinMan)", "short": "TinMan", "kind": "weekly", "period": 6, "first": "2026-09-11"},
-  {"name": "Mercenary Exchange", "short": "Mercs", "kind": "weekly", "period": 6, "first": "2026-09-11"},
+  {"name": "Mercenary Exchange (Trade Routes)", "short": "Mercs", "kind": "weekly", "period": 6, "first": "2026-09-11"},
   {"name": "The Great Hunt", "short": "GH", "kind": "weekly", "period": 6, "first": "2026-09-13"},
   {"name": "Pursuit of Evolution", "short": "Evolution", "kind": "weekly", "period": 6, "first": "2026-09-13"},
   {"name": "Immortal Essence", "short": "Essence", "kind": "weekly", "period": 6, "first": "2026-09-13"},
   {"name": "Doomsday", "short": "Doomsday", "kind": "weekly", "period": 6, "first": "2026-09-14"},
   {"name": "Pursuit of Experience", "short": "Experience", "kind": "weekly", "period": 6, "first": "2026-09-14"},
   {"name": "Thirst for Battle", "short": "Thirst", "kind": "weekly", "period": 6, "first": "2026-09-24"},
-  {"name": "Conquerors' Revival", "short": "Revival", "kind": "weekly", "period": 6, "first": "2026-09-24"},
-  {"name": "Trade Routes", "short": "Trade Routes", "kind": "weekly", "period": 6, "first": "2026-09-29"}
+  {"name": "Conquerors' Revival", "short": "Revival", "kind": "weekly", "period": 6, "first": "2026-09-24"}
  ],
  "summon": {"first": "2026-09-09", "position": 10, "days": 2}
 }
