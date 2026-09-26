@@ -1,16 +1,6 @@
 {
- "updated": "2026-09-26T07:32:00Z",
+ "updated": "2026-09-26T12:59:00Z",
  "main": [
-  {
-   "start": "2026-09-26T07:00:00Z",
-   "name": "The King's Mercy",
-   "bonus": "+10% health"
-  },
-  {
-   "start": "2026-09-26T09:00:00Z",
-   "name": "Battle Training",
-   "bonus": "+5% dominance"
-  },
   {
    "start": "2026-09-26T12:30:00Z",
    "name": "Power Points",
@@ -50,14 +40,19 @@
    "start": "2026-09-27T13:00:00Z",
    "name": "War Tools",
    "bonus": "+20% army carrying"
+  },
+  {
+   "start": "2026-09-27T16:30:00Z",
+   "name": "Regular Decrees",
+   "bonus": "+10% health"
+  },
+  {
+   "start": "2026-09-27T20:00:00Z",
+   "name": "Officer Academy",
+   "bonus": "+10% strength"
   }
  ],
  "sk": [
-  {
-   "start": "2026-09-26T06:30:00Z",
-   "name": "Silver Rush",
-   "bonus": "+20% food, silver prod."
-  },
   {
    "start": "2026-09-26T10:00:00Z",
    "name": "Battle Training",
@@ -102,6 +97,11 @@
    "start": "2026-09-27T14:00:00Z",
    "name": "Gold Rush",
    "bonus": "+25% food, silver prod."
+  },
+  {
+   "start": "2026-09-27T19:00:00Z",
+   "name": "Scientific Progress",
+   "bonus": "+10% research speed"
   }
  ]
 }
